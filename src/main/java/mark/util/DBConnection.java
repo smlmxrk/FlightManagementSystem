@@ -31,6 +31,6 @@ public class DBConnection {
         return connection;
     }
 
-
-
 }
+
+// remember the db properties isn't on laptop, configure later
