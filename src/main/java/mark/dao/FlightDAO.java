@@ -22,7 +22,8 @@ public class FlightDAO {
                 flight.setFlightID(rs.getInt("flightID"));
                 flight.setFlightNumber(rs.getString("flightNumber"));
                 flight.setDestination(rs.getString("destination"));
-                flight.setDepartureTime(rs.getTimestamp("arrivalTime").toLocalDateTime());
+                flight.setDepartureTime(rs.getTimestamp("departureTime").toLocalDateTime());
+                flight.setArrivalTime(rs.getTimestamp("arrivalTime").toLocalDateTime());
                 flight.setGateNumber(rs.getString("gateNumber"));
                 flight.setStatus(rs.getString("status"));
                 flights.add(flight);
@@ -53,4 +54,58 @@ public class FlightDAO {
         }
     }
 
+    public void deleteFlight(int flightID) {
+        String sql = "DELETE FROM Flights WHERE flightID = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, flightID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         }
+    }
+
+    public void updateFlightStatus(int flightID, String status) {
+        String sql = "UPDATE Flights SET status = ? WHERE flightID = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, status);
+            pstmt.setInt(2, flightID);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Flight getFlightById(int flightID) {
+        String sql = "SELECT * FROM Flights WHERE flightID = ?";
+        Flight flight = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, flightID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    flight = new Flight();
+                    flight.setFlightID(rs.getInt("flightID"));
+                    flight.setFlightNumber(rs.getString("flightNumber"));
+                    flight.setDestination(rs.getString("destination"));
+                    flight.setDepartureTime(rs.getTimestamp("departureTime").toLocalDateTime());
+                    flight.setArrivalTime(rs.getTimestamp("arrivalTime").toLocalDateTime());
+                    flight.setGateNumber(rs.getString("gateNumber"));
+                    flight.setStatus(rs.getString("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flight;
+
+    }
+}
