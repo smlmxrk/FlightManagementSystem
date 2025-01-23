@@ -4,6 +4,33 @@ import java.time.LocalDateTime;
 
 public class Flight {
 
+    //fields
+
+    private int flightID;
+    private String flightNumber;
+    private String destination;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
+    private String gateNumber;
+    private String status;
+
+    public Flight() {
+
+    }
+
+    public Flight(int flightID, String flightNumber, String destination,
+                  LocalDateTime departureTime, LocalDateTime arrivalTime, String gateNumber) {
+        this.flightID = flightID;
+        this.flightNumber = flightNumber;
+        this.destination = destination;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.gateNumber = gateNumber;
+        this.status = status;
+    }
+
+
+
     public int getFlightID() {
     return flightID;
     }
@@ -61,12 +88,19 @@ public class Flight {
     }
 
 
+    //override method for showing the properties of a flight object
+    @Override
+    public String toString() {
+        return "Flight {" +
+                "flightID =" + flightID +
+                ", flightNumber ='" + flightNumber + '\'' +
+                ", destination =" + destination + '\'' +
+                ", destination ='" + destination + '\'' +
+                ", departureTime =" + departureTime +
+                ", arrivalTime =" + arrivalTime +
+                ", gateNumber='" + gateNumber + '\'' +
+                ", status ='" + status + '\'' +
+                '}';
+    }
 
-    public int flightID;
-    private String flightNumber;
-    private String destination;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
-    private String gateNumber;
-    private String status;
 }
