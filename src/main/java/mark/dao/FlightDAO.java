@@ -67,7 +67,7 @@ public class FlightDAO {
         }
     }
 
-    public void updateFlightStatus(int flightID, String status) {
+    public static void updateFlightStatus(int flightID, String status) {
         String sql = "UPDATE Flights SET status = ? WHERE flightID = ?";
 
         try (Connection conn = DBConnection.getConnection();

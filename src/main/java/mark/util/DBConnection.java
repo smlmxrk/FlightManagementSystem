@@ -15,7 +15,9 @@ public class DBConnection {
         if (connection == null) {
             try {
                 Properties properties = new Properties();
-                properties.load(new FileInputStream("src/main/resources/db.properties"));
+                try (FileInputStream fis = new FileInputStream(DBConnection.class.getClassLoader().getResource("db.properties").getFile())) {
+                    properties.load(fis);
+                }
 
                 String url = properties.getProperty("db.url");
                 String user = properties.getProperty("db.user");
@@ -31,6 +33,17 @@ public class DBConnection {
         return connection;
     }
 
-}
+    public static void main(String[] args) {
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                System.out.println("Connection is valid: " + conn.isValid(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            }
+        }
+    }
+
+
 
 // remember the db properties isn't on laptop, configure later

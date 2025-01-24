@@ -1,4 +1,4 @@
-package mark.model;
+package mark.test.model;
 
 public class Flight {
 }
