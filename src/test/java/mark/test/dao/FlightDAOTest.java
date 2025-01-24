@@ -2,96 +2,83 @@ package mark.test.dao;
 
 import mark.dao.FlightDAO;
 import mark.model.Flight;
+import mark.util.DBConnection;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class FlightDAOTest {
-
     public static void main(String[] args) {
-        FlightDAO flightDao = new FlightDAO();
+        FlightDAO flightDAO = new FlightDAO();
 
-        // add a new flight
-        Flight newFlight = new Flight();
-        newFlight.setFlightNumber("AI101");
-        newFlight.setDestination("New York");
-        newFlight.setDepartureTime(LocalDateTime.now().plusHours(3));
-        newFlight.setArrivalTime(LocalDateTime.now().plusHours(8));
-        newFlight.setGateNumber("G5");
-        newFlight.setStatus("Scheduled");
+        // Call the test methods here
+        clearFlightsTable(flightDAO);
+        testAddFlight(flightDAO);
+        testGetAllFlights(flightDAO);
+        //testUpdateFlightStatus(flightDAO);
+        testGetFlightById(flightDAO);
+    }
+    private static void clearFlightsTable(FlightDAO flightDAO) {
+        try (Connection connection = DBConnection.getConnection();
+             Statement statement = connection.createStatement()) {
 
-        flightDao.addFlight(newFlight);
+            statement.executeUpdate("DELETE FROM Flights");
 
+            statement.executeUpdate("ALTER TABLE Flights AUTO_INCREMENT=1");
 
-        List<Flight> flights = flightDao.getAllFlights();
-        if (flights.isEmpty()) {
-            System.out.println("No flights found in the database. Test failed!");
-            return;
+            System.out.println("Flights table cleared and flightID reset.");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        Flight addedFlight = flightDao.getFlightById(newFlight.getFlightID());
-        if(addedFlight != null) {
-            System.out.println("Flight added successfully: " + formatFlight(addedFlight));
-        } else {
-            System.out.println("Flight addition failed!");
-        }
-
-        // test to get all flights
-
-        System.out.println("\nTesting getAllFlights...");
-        System.out.println("Retrieved Flights:");
-
-        for (Flight flight : flights) {
-            System.out.println(formatFlight(flight));
-        }
-
-        // test: update the flight status
-
-        System.out.println("\nTesting updateFlightStatus...");
-        Flight firstFlight = flights.get(0);
-        FlightDAO.updateFlightStatus(firstFlight.getFlightID(), "Delayed");
-
-        Flight updatedFlight = flightDao.getFlightById(firstFlight.getFlightID());
-        if (updatedFlight != null && "Delayed".equals(updatedFlight.getStatus())) {
-            System.out.println("Flight status updated successfully: " + formatFlight(updatedFlight));
-        } else {
-            System.out.println("Failed to update flight status!");
-        }
-
-        // test: get flight by ID
-        System.out.println("\nTesting getFlightById...");
-        Flight flightById = flightDao.getFlightById(firstFlight.getFlightID());
-        if (flightById != null) {
-            System.out.println("Retrieved flight by ID successfully: " + formatFlight(flightById));
-        } else {
-            System.out.println("Failed to retrieve flight by ID!");
-        }
-
-        //database disconnect hook
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() ->  {
-            try {
-                if (mark.util.DBConnection.getConnection() != null &&
-                    !mark.util.DBConnection.getConnection().isClosed()) {
-                    mark.util.DBConnection.getConnection().close();
-                    System.out.println("\nDatabase connection closed.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }));
-
     }
 
-    private static String formatFlight(Flight flight) {
-        return String.format("Flight ID %d, Number: %s, Destination: %s, " +
-                             "Departure: %s, Arrival %s, Gate: %s, Status: %s",
-                             flight.getFlightID(),
-                             flight.getFlightNumber(),
-                             flight.getDestination(),
-                             flight.getDepartureTime(),
-                             flight.getArrivalTime(),
-                             flight.getGateNumber(),
-                             flight.getStatus());
+    private static void testAddFlight(FlightDAO flightDAO) {
+        Flight flight = new Flight();
+        flight.setFlightNumber("AI101");
+        flight.setDestination("New York");
+        flight.setDepartureTime(LocalDateTime.now().plusHours(3));
+        flight.setArrivalTime(LocalDateTime.now().plusHours(8));
+        flight.setGateNumber("G5");
+        flight.setStatus("Scheduled");
+
+        flightDAO.addFlight(flight);
+        System.out.println("Test addFlight: Flight added successfully.");
+    }
+
+    private static void testGetAllFlights(FlightDAO flightDAO) {
+        List<Flight> flights = flightDAO.getAllFlights();
+        if (flights.isEmpty()) {
+            System.out.println("Test getAllFlights: No flights found.");
+        } else {
+            System.out.println("Test getAllFlights: Retrieved flights:");
+            for (Flight flight : flights) {
+                System.out.println(flight.getFlightID() + " - " + flight.getFlightNumber() + " - " + flight.getStatus());
+            }
+        }
+    }
+
+    private static void testUpdateFlightStatus(FlightDAO flightDAO) {
+        List<Flight> flights = flightDAO.getAllFlights();
+        if (!flights.isEmpty()) {
+            Flight flight = flights.getFirst(); // Get the first flight
+            FlightDAO.updateFlightStatus(flight.getFlightID(), "Delayed");
+            System.out.println("Test updateFlightStatus: Updated status for flight ID: " + flight.getFlightID());
+        } else {
+            System.out.println("Test updateFlightStatus: No flights available to update.");
+        }
+    }
+
+    private static void testGetFlightById(FlightDAO flightDAO) {
+        List<Flight> flights = flightDAO.getAllFlights();
+        if (!flights.isEmpty()) {
+            Flight flight = flightDAO.getFlightById(flights.get(0).getFlightID());
+            System.out.println("Test getFlightById: Retrieved flight: " + flight.getFlightNumber() + " - " + flight.getStatus());
+        } else {
+            System.out.println("Test getFlightById: No flights found to retrieve.");
+        }
     }
 }

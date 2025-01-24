@@ -12,37 +12,34 @@ public class DBConnection {
     private static Connection connection;
 
     public static Connection getConnection() {
-        if (connection == null) {
             try {
                 Properties properties = new Properties();
-                try (FileInputStream fis = new FileInputStream(DBConnection.class.getClassLoader().getResource("db.properties").getFile())) {
-                    properties.load(fis);
-                }
+                properties.load(new FileInputStream("src/main/resources/db.properties"));
 
                 String url = properties.getProperty("db.url");
                 String user = properties.getProperty("db.user");
                 String password = properties.getProperty("db.password");
 
-                connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Database connection successful!");
+                return DriverManager.getConnection(url, user, password);
             } catch (IOException | SQLException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to connect to database!");
+            e.printStackTrace();
+            return null;
             }
         }
-        return connection;
-    }
 
-    public static void main(String[] args) {
-        try (Connection conn = DBConnection.getConnection()) {
+        public static void main(String[] args) {
+        try (Connection conn =  DBConnection.getConnection()) {
             if (conn != null) {
-                System.out.println("Connection is valid: " + conn.isValid(2));
+                System.out.println("Database connection is working!");
+            } else {
+                System.out.println("Failed to connect to the database.");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             }
         }
     }
+
 
 
 
