@@ -14,13 +14,17 @@ import java.sql.Statement;
 public class FlightDAOTest {
     public static void main(String[] args) {
         FlightDAO flightDAO = new FlightDAO();
+        Flight flight = new Flight();
 
         // Call the test methods here
+        testToStringFlight(flight);
         clearFlightsTable(flightDAO);
         testAddFlight(flightDAO);
+        testAddFlight2(flightDAO);
         testGetAllFlights(flightDAO);
-        //testUpdateFlightStatus(flightDAO);
+        testUpdateFlightStatus(flightDAO);
         testGetFlightById(flightDAO);
+        testGetFlightById2(flightDAO);
     }
     private static void clearFlightsTable(FlightDAO flightDAO) {
         try (Connection connection = DBConnection.getConnection();
@@ -36,6 +40,19 @@ public class FlightDAOTest {
         }
     }
 
+    private static void testToStringFlight(Flight flight) {
+        Flight flight1 = new Flight();
+
+        flight1.setFlightNumber("A2103");
+        flight1.setDestination("Atlanta");
+        flight1.setDepartureTime(LocalDateTime.of(2025, 1, 10, 10, 10));
+        flight1.setArrivalTime(LocalDateTime.of(2025, 1, 10, 13, 13));
+        flight1.setGateNumber("G6");
+        flight1.setStatus("Scheduled");
+
+        System.out.println(flight1.toString());
+    }
+
     private static void testAddFlight(FlightDAO flightDAO) {
         Flight flight = new Flight();
         flight.setFlightNumber("AI101");
@@ -43,6 +60,20 @@ public class FlightDAOTest {
         flight.setDepartureTime(LocalDateTime.now().plusHours(3));
         flight.setArrivalTime(LocalDateTime.now().plusHours(8));
         flight.setGateNumber("G5");
+        flight.setStatus("Scheduled");
+
+        flightDAO.addFlight(flight);
+        System.out.println("Test addFlight: Flight added successfully.");
+    }
+
+    // second method to test if the update method *actually* works
+    private static void testAddFlight2(FlightDAO flightDAO) {
+        Flight flight = new Flight();
+        flight.setFlightNumber("AC606");
+        flight.setDestination("Atlanta");
+        flight.setDepartureTime(LocalDateTime.now().plusHours(4));
+        flight.setArrivalTime(LocalDateTime.now().plusHours(9));
+        flight.setGateNumber("G7");
         flight.setStatus("Scheduled");
 
         flightDAO.addFlight(flight);
@@ -76,7 +107,17 @@ public class FlightDAOTest {
         List<Flight> flights = flightDAO.getAllFlights();
         if (!flights.isEmpty()) {
             Flight flight = flightDAO.getFlightById(flights.get(0).getFlightID());
-            System.out.println("Test getFlightById: Retrieved flight: " + flight.getFlightNumber() + " - " + flight.getStatus());
+            System.out.println("Test getFlightById: Retrieved flight:\n " + flight.getFlightNumber() + " - " + flight.getStatus());
+        } else {
+            System.out.println("Test getFlightById: No flights found to retrieve.");
+        }
+    }
+
+    private static void testGetFlightById2(FlightDAO flightDAO) {
+        List<Flight> flights = flightDAO.getAllFlights();
+        if (!flights.isEmpty()) {
+            Flight flight = flightDAO.getFlightById(flights.get(1).getFlightID());
+            System.out.println("Test getFlightById: Retrieved flight:\n " + flight.getFlightNumber() + " - " + flight.getStatus());
         } else {
             System.out.println("Test getFlightById: No flights found to retrieve.");
         }

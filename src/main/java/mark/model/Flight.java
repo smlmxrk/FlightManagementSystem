@@ -92,15 +92,15 @@ public class Flight {
     @Override
     public String toString() {
         return "Flight {" +
-                "flightID =" + flightID +
-                ", flightNumber ='" + flightNumber + '\'' +
-                ", destination =" + destination + '\'' +
-                ", destination ='" + destination + '\'' +
-                ", departureTime =" + departureTime +
-                ", arrivalTime =" + arrivalTime +
-                ", gateNumber='" + gateNumber + '\'' +
-                ", status ='" + status + '\'' +
+                "flightID = " + flightID +
+                ", flightNumber = " + flightNumber +
+                ", destination = " + destination +
+                ", departureTime = " + departureTime +
+                ", arrivalTime = " + arrivalTime +
+                ", gateNumber = " + gateNumber +
+                ", status = " + status +
                 '}';
     }
+
 
 }
