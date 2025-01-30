@@ -21,7 +21,7 @@ public class Login extends JPanel {
     private JCheckBox rememberMe;
 
 
-    // main login gui-builder
+    // login page gui-builder
 
     private void init() {
         setLayout(new MigLayout("fill, insets 20", "[center]"));
@@ -70,7 +70,6 @@ public class Login extends JPanel {
         panel.add(createHelpLabel(), "gapy 10");
 
         add(panel);
-
 
     }
 
