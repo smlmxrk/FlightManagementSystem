@@ -18,6 +18,8 @@ public class Flight {
 
     }
 
+    // constructor
+
     public Flight(int flightID, String flightNumber, String destination,
                   LocalDateTime departureTime, LocalDateTime arrivalTime, String gateNumber) {
         this.flightID = flightID;
@@ -29,7 +31,7 @@ public class Flight {
         this.status = status;
     }
 
-
+    // getters and setters
 
     public int getFlightID() {
     return flightID;
