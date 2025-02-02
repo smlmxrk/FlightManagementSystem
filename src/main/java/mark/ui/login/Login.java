@@ -3,11 +3,13 @@ package mark.ui.login;
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 // db import goes here
+import java.awt.Desktop;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 
 public class Login extends JPanel {
 
@@ -85,6 +87,14 @@ public class Login extends JPanel {
         getHelp.addActionListener(e -> {
             System.out.println("Go help form");
                 });
+        getHelp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openWebPage("https://github.com/smlmxrk");
+            }
+        });
+
+
         JLabel label = new JLabel("Having trouble signing in?");
         label.putClientProperty(FlatClientProperties.STYLE,"" +
                 "[light]foreground:lighten(@foreground, 30%);" +
@@ -94,5 +104,16 @@ public class Login extends JPanel {
 
         return panel;
 
+    }
+
+    public static void openWebPage(String url) {
+        try {
+          Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+          if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+              desktop.browse(new URI(url));
+          }
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
     }
 }
