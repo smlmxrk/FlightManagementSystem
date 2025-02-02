@@ -22,7 +22,6 @@ public class Login extends JPanel {
     private JButton login;
     private JCheckBox rememberMe;
 
-
     // login page gui-builder
 
     private void init() {
@@ -93,7 +92,6 @@ public class Login extends JPanel {
                 openWebPage("https://github.com/smlmxrk");
             }
         });
-
 
         JLabel label = new JLabel("Having trouble signing in?");
         label.putClientProperty(FlatClientProperties.STYLE,"" +
