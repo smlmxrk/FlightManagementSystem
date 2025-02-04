@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class UserDAO {
 
-    public void registerUser(String username, String plainPassword, String role) {
+    public static void registerUser(String username, String plainPassword, String role) {
         String hashedPassword = PasswordUtil.hashPassword(plainPassword);
         String sql = "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
