@@ -17,6 +17,7 @@ public class UserDAOTest {
     private static void testRegisterUser(User user) {
         User user1 = new User(001, "testUser1", "password");
         //UserDAO.registerUser(user1);
+        // some bullshit
     }
 }
 
