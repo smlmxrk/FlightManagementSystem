@@ -12,13 +12,12 @@ public class UserDAOTest {
 
     public static void main(String[] args) {
 
+        UserDAO userDAO = new UserDAO();
+
+        userDAO.registerUser("smlmxrk", "password1", "admin");
+
     }
 
-    private static void testRegisterUser(User user) {
-        User user1 = new User(001, "testUser1", "password");
-        //UserDAO.registerUser(user1);
-        // some bullshit
-    }
 }
 
 // todo: figure out test methods/program logic

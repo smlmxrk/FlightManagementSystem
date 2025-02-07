@@ -1,10 +1,11 @@
 package mark.ui.login;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.ui.FlatLineBorder;
 import net.miginfocom.swing.MigLayout;
-// db import goes here
 import java.awt.Desktop;
-
+import mark.dao.UserDAO;
+import mark.model.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,8 @@ public class Login extends JPanel {
         panel.putClientProperty(FlatClientProperties.STYLE,"" +
                 "arc:20;" +
                 "[light]background:darken(@background, 3%);" +
-                "[dark]background:lighten(@background, 3%);");
+                "[dark]background:lighten(@background, 3%);"
+                );
 
         password.putClientProperty(FlatClientProperties.STYLE,""
         + "showRevealButton:true");
@@ -69,9 +71,26 @@ public class Login extends JPanel {
         panel.add(rememberMe, "grow 0");
         panel.add(login, "gapy 10");
         panel.add(createHelpLabel(), "gapy 10");
-
+        //panel.setBorder( new FlatLineBorder( new Insets( 16, 16, 16, 16 ), new Color(32, 106, 145), 1, 8 ) );
+        // leaving border off for now ^
         add(panel);
 
+        login.addActionListener(e -> authenticateUser());
+
+    }
+
+    private void authenticateUser() {
+        String userInput = username.getText();
+        String passwordInput = new String(password.getPassword());
+
+        UserDAO userDAO = new UserDAO();
+        User user = UserDAO.authenticateUser(userInput, passwordInput);
+
+        if (user != null) {
+            JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private Component createHelpLabel() {

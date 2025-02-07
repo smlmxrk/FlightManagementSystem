@@ -22,8 +22,8 @@ public class UserDAO {
         }
     }
 
-    public User authenticateUser(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ? AND password_hash = SHA2(?, 256)";
+    public static User authenticateUser(String username, String password) {
+        String sql = "SELECT * FROM users WHERE username = ?";
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
